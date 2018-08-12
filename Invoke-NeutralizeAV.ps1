@@ -1,4 +1,5 @@
 # Input for Target(s) & Credentials
+# Use 127.0.0.1 if Re-Enabling Services Locally
 $StartIP = Read-Host -Prompt 'Enter Start of IP Range..'
 $EndIP = Read-Host -Prompt 'Enter End of IP Range.. (Same as Start if Single Host)'
 $username = Read-Host -Prompt 'Enter Username'
