@@ -15,5 +15,7 @@ Paste the following into the elevated CMD prompt to download the PS1 script.  (N
 
 2) Enjoy! :)
 
+<p align="center"><img align="center" width="600" alt="Invoke-NeutralizeAV Screenshot" src="https://i.imgur.com/lAyw41i.png"></p>
+
 # Closing Thoughts
 This is a quick and dirty PoC.  I plan to fix it up and add more functionality soon (host list, CIDR notation, disabling services & other bypass methods first, quiet mode, etc), but hopefully in the meantime this will assist people to more quickly bypass next gen AV on remote hosts during a pentest.  I can't disclose the one AV vendor I know this works against, but I'm hopeful it will work on others.  I would love it if you could report back on what does/doesn't work.  I wrote this script in a dynamic way so I didn't have to keep an ongoing list of current AV Service Names.
