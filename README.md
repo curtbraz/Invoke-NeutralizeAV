@@ -2,7 +2,7 @@
 Quick PoC I Wrote for Bypassing Next Gen AV Remotely for Pentesting
 
 # Description
-I created this PoC based on a recent discovery of mine during a penetration test where I had SYSTEM access but could not stop AV processes or Services.  I found that simply moving the binaries on disk to another directory essentially neutralized the running AV process.  Use this script to effectively shut down AV across an enterprise environment so you can execute your payloads, etc.  There's also an "Enable" switch to set everything back when finished.
+I created this PoC based on a recent discovery of mine during a penetration test where I had SYSTEM access but could not stop AV processes or Services.  I found that simply moving the binaries on disk to another directory essentially neutralized the running AV process.  Use this script to effectively shut down AV across an enterprise environment so you can execute your payloads, etc.  There's also an "Enable" switch to set everything back when finished.  I recently added support to remotely and temporarily disable "Real Time Protection" for Windows Defender as well if it's detected on the remote host.
 
 # Instructions
 You'll probably want to read the blog first at https://curtbraz.blogspot.com/2018/08/bypassing-next-gen-av-during-pentest.html.  
